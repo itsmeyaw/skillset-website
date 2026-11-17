@@ -137,16 +137,26 @@ const textLink =
       </p>
 
       <div class="mt-12 grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
-        <Terminal title="Without Skillset" lines={without} data-fade-out>
+        <Terminal
+          title="Without Skillset"
+          lines={without}
+          class="order-1 lg:order-none"
+          data-fade-out
+        >
           6 installs, each at whatever commit is latest.
         </Terminal>
-        <div>
-          <Terminal title="With Skillset" lines={withSkillset} data-fade-in>
+        <div class="contents lg:block">
+          <Terminal
+            title="With Skillset"
+            lines={withSkillset}
+            class="order-3 lg:order-none"
+            data-fade-in
+          >
             3 installs, each at the pinned commits
             <span class="font-mono text-accent-text">9b24366</span> and
             <span class="font-mono text-accent-text">5863806</span>.
           </Terminal>
-          <p class="mt-6 max-w-[62ch] text-pretty text-text-secondary">
+          <p class="order-2 max-w-[62ch] text-pretty text-text-secondary lg:order-none lg:mt-6">
             A Skillset records that routine once: each skill, its repository and its commit. Every
             project then needs one command.
           </p>
