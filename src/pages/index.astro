@@ -196,6 +196,147 @@ const textLink =
       </div>
     </section>
 
+    <section id="context" class:list={[wrap, "py-20 lg:py-24"]}>
+      <h2 class="max-w-[24ch] text-balance text-title">Goodbye context bloat</h2>
+      <p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+        Global skills are nice, but they are not always useful and take space in your agent context.
+      </p>
+
+      <figure
+        class="relative mt-12 grid overflow-hidden rounded-sm border border-border bg-bg-surface"
+        data-compare
+      >
+        <figcaption class="sr-only">
+          Without Skillset, the agent loads all 7 skills. With Skillset, the project installs only
+          the 3 this task needs.
+        </figcaption>
+        {/* With Skillset sits underneath; the Without panel on top is clipped to the slider position. */}
+        {[true, false].map((skillset) => (
+          <div
+            class:list={[
+              "col-start-1 row-start-1 bg-bg-surface",
+              { "[clip-path:inset(0_calc(100%-var(--pos))_0_0)]": !skillset },
+            ]}
+            style={skillset ? undefined : "--pos: 50%"}
+            data-pos={!skillset}
+            aria-hidden={skillset ? "true" : undefined}
+          >
+            <p
+              class:list={[
+                "border-b border-border-separator px-4 py-2.5 font-mono text-small sm:px-6",
+                skillset ? "text-right text-accent-text" : "text-text-muted",
+              ]}
+            >
+              {skillset ? "With" : "Without"} Skillset
+            </p>
+            <div class="p-4 sm:p-6">
+              <p class="text-small text-text-muted">Task</p>
+              <p class="mt-1 font-mono text-code text-text-primary">
+                Add rate limiting to POST /orders
+              </p>
+              {session.map(({ label, skills, unused }) => (
+                <div class="relative mt-8">
+                  <p class:list={["text-small text-text-muted", { invisible: skillset && unused }]}>
+                    {label}
+                  </p>
+                  {skillset && unused && (
+                    <p class="absolute inset-0 flex items-center justify-end text-right text-small text-text-muted">
+                      <span class="max-w-[16ch] sm:max-w-none">
+                        UI skills not installed in this project
+                      </span>
+                    </p>
+                  )}
+                  <dl
+                    class:list={[
+                      "mt-3 grid gap-y-4",
+                      { "opacity-70": unused && !skillset, invisible: unused && skillset },
+                    ]}
+                    data-unused={unused && !skillset}
+                  >
+                    {skills.map(({ name, description }) => (
+                      <div class="grid gap-x-8 gap-y-1 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                        <dt class="font-mono text-code text-text-primary">{name}</dt>
+                        <dd class="text-pretty text-small text-text-secondary">{description}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
+            <div class="border-t border-border-separator px-4 py-4 sm:px-6">
+              <p class="text-small text-text-secondary">
+                Share of skill descriptions loaded, by length
+              </p>
+              <div
+                class="mt-3 grid gap-x-0.5"
+                style={`grid-template-columns: ${session.map(({ chars }) => `minmax(0, ${chars}fr)`).join(" ")}`}
+              >
+                {session.map(({ short, skills, chars, unused }) => (
+                  <div>
+                    <div aria-hidden="true" class="flex h-2 gap-0.5">
+                      {skills.map(({ description }) => (
+                        <span
+                          class:list={[
+                            "rounded-[1px]",
+                            !unused
+                              ? "bg-accent-solid"
+                              : skillset
+                                ? "bg-border-separator"
+                                : "bg-border-strong",
+                          ]}
+                          style={`flex: ${description.length} 1 0`}
+                        />
+                      ))}
+                    </div>
+                    <p
+                      class:list={[
+                        "mt-2 text-small tabular-nums text-text-muted",
+                        { "text-right": skillset && unused },
+                      ]}
+                    >
+                      {skillset && unused
+                        ? "Not installed"
+                        : `${short} ${Math.round((100 * chars) / sessionChars)}%`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          aria-label="Compare without and with Skillset"
+          class="peer absolute inset-0 z-10 size-full cursor-ew-resize appearance-none bg-transparent opacity-0 [touch-action:pan-y] [&::-moz-range-thumb]:w-px [&::-webkit-slider-thumb]:w-px [&::-webkit-slider-thumb]:appearance-none"
+        />
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 translate-x-(--pos) peer-focus-visible:**:data-knob:outline-2 peer-focus-visible:**:data-knob:outline-offset-2 peer-focus-visible:**:data-knob:outline-border-focus"
+          style="--pos: 50%"
+          data-pos
+        >
+          <span class="absolute inset-y-0 left-0 w-px bg-accent-solid"></span>
+          <span
+            class="absolute top-1/2 left-0 flex size-9 -translate-1/2 items-center justify-center rounded-full border border-accent-solid bg-bg-surface text-accent-text"
+            data-knob
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="size-4"
+            >
+              <path d="m9 6-6 6 6 6M15 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </div>
+      </figure>
+    </section>
+
     <section id="why" class:list={[wrap, "py-20 lg:py-24"]}>
       <h2 class="max-w-[24ch] text-balance text-title">Stop reinstalling skills</h2>
       <p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
@@ -229,66 +370,6 @@ const textLink =
           </p>
         </div>
       </div>
-    </section>
-
-    <section id="context" class:list={[wrap, "py-20 lg:py-24"]}>
-      <h2 class="max-w-[24ch] text-balance text-title">Each project built differently</h2>
-      <p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
-        Global skills are nice, but they are not always useful and take space in your agent context.
-      </p>
-
-      <figure class="mt-12 overflow-hidden rounded-sm border border-border bg-bg-surface">
-        <figcaption class="border-b border-border-separator px-4 py-2.5 font-mono text-small text-text-muted sm:px-6">
-          Agent session without Skillset
-        </figcaption>
-        <div class="p-4 sm:p-6">
-          <p class="text-small text-text-muted">Task</p>
-          <p class="mt-1 font-mono text-code text-text-primary">
-            Add rate limiting to POST /orders
-          </p>
-          {session.map(({ label, skills, unused }) => (
-            <div class="mt-8">
-              <p class="text-small text-text-muted">{label}</p>
-              <dl class:list={["mt-3 grid gap-y-4", { "opacity-70": unused }]} data-unused={unused}>
-                {skills.map(({ name, description }) => (
-                  <div class="grid gap-x-8 gap-y-1 sm:grid-cols-[11rem_minmax(0,1fr)]">
-                    <dt class="font-mono text-code text-text-primary">{name}</dt>
-                    <dd class="text-pretty text-small text-text-secondary">{description}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ))}
-        </div>
-        <div class="border-t border-border-separator px-4 py-4 sm:px-6">
-          <p class="text-small text-text-secondary">
-            Share of skill descriptions loaded, by length
-          </p>
-          <div
-            class="mt-3 grid gap-x-0.5"
-            style={`grid-template-columns: ${session.map(({ chars }) => `minmax(0, ${chars}fr)`).join(" ")}`}
-          >
-            {session.map(({ short, skills, chars, unused }) => (
-              <div>
-                <div aria-hidden="true" class="flex h-2 gap-0.5">
-                  {skills.map(({ description }) => (
-                    <span
-                      class:list={[
-                        "rounded-[1px]",
-                        unused ? "bg-border-strong" : "bg-accent-solid",
-                      ]}
-                      style={`flex: ${description.length} 1 0`}
-                    />
-                  ))}
-                </div>
-                <p class="mt-2 text-small tabular-nums text-text-muted">
-                  {short} {Math.round((100 * chars) / sessionChars)}%
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </figure>
     </section>
 
     <section id="how" class:list={[wrap, "py-20 lg:py-24"]}>
@@ -446,6 +527,19 @@ const textLink =
     animate(el, { opacity: 0.75 }, { duration: quick, ease });
     return () => animate(el, { opacity: 0.4 }, { duration: quick, ease });
   });
+
+  const compare = document.querySelector<HTMLElement>("[data-compare]");
+  const slider = compare?.querySelector("input");
+  if (compare && slider) {
+    // Only the clipped panel and the handle read --pos, so a drag doesn't restyle the whole figure.
+    const targets = compare.querySelectorAll<HTMLElement>("[data-pos]");
+    const move = () => {
+      for (const el of targets) el.style.setProperty("--pos", `${slider.value}%`);
+      slider.setAttribute("aria-valuetext", `${slider.value}% without Skillset shown`);
+    };
+    slider.addEventListener("input", move);
+    move(); // the browser may restore a dragged value on back navigation
+  }
 
   // Nothing below runs with reduced motion, because every state is already readable without it.
   // It also stays off once the 0.8s fallback in Layout has shown the hero, so a late script can't hide it again.
