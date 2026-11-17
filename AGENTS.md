@@ -8,9 +8,22 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Product.md
+
+Always read PRODUCT.md when designing.
+
+## Development
+
+Load the skills for implementation and design:
+
+- `animation-vocabulary`
+- `design-taste-frontend`
+- `interaction-design`
+- `animate`
+
 ## Documentation
 
-Full documentation: https://docs.astro.build
+Full documentation: <https://docs.astro.build>
 
 Consult these guides before working on related tasks:
 
