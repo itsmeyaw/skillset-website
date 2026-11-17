@@ -39,6 +39,9 @@ importers:
       oxlint:
         specifier: ^1.94.0
         version: 1.94.0
+      sharp:
+        specifier: 0.35.5
+        version: 0.35.5
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

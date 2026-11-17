@@ -23,9 +23,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Skillset: Next generation agent skills management. npm install -g @itsmeyaw/skillset"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#071432" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <Font cssVariable="--font-inter" preload />
     <Font cssVariable="--font-gabarito" preload />
     <Font cssVariable="--font-geist-mono" preload />

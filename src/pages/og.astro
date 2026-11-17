@@ -1,0 +1,41 @@
+---
+// Source for dist/og.png. `pnpm build` screenshots it with scripts/og.mjs, then drops this page from dist.
+import { Font } from "astro:assets";
+import Mark from "../components/Mark.astro";
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Skillset OG image</title>
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-gabarito" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <style is:global>
+      astro-dev-toolbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="m-0 bg-bg-page bg-grain text-text-primary">
+    <main class="relative isolate flex h-[630px] w-[1200px] flex-col overflow-hidden px-20 py-16">
+      <div aria-hidden="true" class="grain-glow absolute inset-0 -z-10"></div>
+      <div class="flex items-center justify-between gap-8">
+        <p class="flex items-center gap-3 font-display text-[1.75rem] tracking-[-0.01em]">
+          <Mark class="h-8" />
+          Skillset
+        </p>
+        <p class="text-[1.375rem] text-text-secondary">skillset.itsmeyaw.id</p>
+      </div>
+      <h1 class="mt-auto max-w-[17ch] text-balance font-display text-[5rem] leading-[1.05] tracking-[-0.03em]">
+        Next generation agent skills management
+      </h1>
+      <p class="mt-10 self-start rounded-sm border border-border-strong bg-bg-surface px-6 py-4 font-mono text-[1.625rem]">
+        <span class="text-accent-text">$</span> npm install -g @itsmeyaw/skillset
+      </p>
+    </main>
+  </body>
+</html>

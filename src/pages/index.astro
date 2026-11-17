@@ -3,6 +3,7 @@ import { agents } from "../components/agents";
 import CommandLine from "../components/CommandLine.astro";
 import Terminal, { type Line } from "../components/Terminal.astro";
 import Layout from "../layouts/Layout.astro";
+import Mark from "../components/Mark.astro";
 
 const install = "npm install -g @itsmeyaw/skillset";
 const github = "https://github.com/itsmeyaw/skillset";
@@ -136,7 +137,8 @@ const textLink =
     class="grain-glow pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(100svh,56rem)]"
   ></div>
   <header class:list={[wrap, "flex h-18 items-center justify-between gap-6"]}>
-    <a href="/" class="inline-flex min-h-11 items-center text-heading">
+    <a href="/" class="inline-flex min-h-11 items-center gap-2.5 text-heading">
+      <Mark class="h-5" />
       Skillset
     </a>
     <nav aria-label="Main" class="flex items-center gap-8">
