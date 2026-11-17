@@ -17,7 +17,7 @@ const { title, lines, class: className, ...rest } = Astro.props;
 <figure class:list={['overflow-hidden rounded-sm border border-border bg-bg-surface', className]} {...rest}>
 	<figcaption class="border-b border-border-separator px-4 py-2.5 font-mono text-small text-text-muted">{title}</figcaption>
 	<pre class="whitespace-pre-wrap p-4 font-mono text-code">{lines.map((line) => 'cmd' in line
-		? <span class="block pl-[2ch] -indent-[2ch] text-text-primary"><span class="select-none text-accent-text" aria-hidden="true">$ </span><Words text={line.cmd} /></span>
+		? <span class="block ps-[2ch] -indent-[2ch] text-text-primary"><span class="select-none text-accent-text" aria-hidden="true">$ </span><Words text={line.cmd} /></span>
 		: <span class="block text-text-secondary"><Words text={line.out} mark={line.mark} /></span>
 	)}</pre>
 	{Astro.slots.has('default') && (
