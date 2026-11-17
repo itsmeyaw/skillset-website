@@ -1,7 +1,7 @@
 ---
+import { agents } from "../components/agents";
 import CommandLine from "../components/CommandLine.astro";
 import Terminal, { type Line } from "../components/Terminal.astro";
-import Words from "../components/Words.astro";
 import Layout from "../layouts/Layout.astro";
 
 const install = "npm install -g @itsmeyaw/skillset";
@@ -98,8 +98,12 @@ const textLink =
       ]}
     >
       <h1 class="text-balance text-display" data-enter>
-        Curate your agent skills once. Install them in every project.
+        Next generation agent skills management
       </h1>
+
+      <p class="mt-6 max-w-2xl text-pretty text-lead text-text-muted" data-enter>
+        Skillset CLI makes it easier for you to manage all your agent skills for all your projects.
+      </p>
 
       <div class="mt-10 max-w-200" data-enter>
         <CommandLine command={install} primary />
@@ -108,24 +112,31 @@ const textLink =
         </p>
       </div>
 
-      <div class="mt-12 lg:mt-16" data-enter>
-        <p id="next-steps" class="text-small text-text-muted">
-          Then two commands
+      <div class="mt-12 flex flex-wrap items-center gap-x-5 gap-y-3 lg:mt-14" data-enter>
+        <p id="agents-label" class="text-small text-text-muted">
+          Works with these agents:
         </p>
-        <ol aria-labelledby="next-steps" class="mt-3 border-t border-border-separator">
-          <li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
-            <code class="font-mono text-command">
-              <Words text="skillset add --set my-set" />
-            </code>
-            <span class="text-text-secondary">Save skills from any repository as a list.</span>
-          </li>
-          <li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
-            <code class="font-mono text-command">
-              <Words text="skillset install my-set" />
-            </code>
-            <span class="text-text-secondary">Install that list in the current project.</span>
-          </li>
-        </ol>
+        <ul
+          aria-labelledby="agents-label"
+          class="flex flex-wrap items-center gap-x-4 gap-y-2 text-text-primary"
+        >
+          {agents.map(({ name, paths }) => (
+            <li data-agent class="opacity-40">
+              <svg
+                role="img"
+                aria-label={name}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-5"
+              >
+                <title>{name}</title>
+                {paths.map((d) => (
+                  <path d={d} fill-rule="evenodd" />
+                ))}
+              </svg>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 
@@ -296,9 +307,16 @@ const textLink =
 </Layout>
 
 <script>
-  import { animate, scroll, stagger } from "motion";
+  import { animate, hover, scroll, stagger } from "motion";
 
   const ease = [0.23, 1, 0.32, 1] as const;
+
+  // Icons stay translucent at rest and on hover, so the hover only firms them up.
+  const quick = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.2;
+  hover("[data-agent]", (el) => {
+    animate(el, { opacity: 0.75 }, { duration: quick, ease });
+    return () => animate(el, { opacity: 0.4 }, { duration: quick, ease });
+  });
 
   // Nothing below runs with reduced motion, because every state is already readable without it.
   // It also stays off once the 0.8s fallback in Layout has shown the hero, so a late script can't hide it again.

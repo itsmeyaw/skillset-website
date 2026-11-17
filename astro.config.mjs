@@ -10,9 +10,17 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(),
-      name: "Geist",
-      cssVariable: "--font-geist",
+      name: "Inter",
+      cssVariable: "--font-inter",
       weights: ["400 600"],
+      styles: ["normal"],
+      subsets: ["latin"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Gabarito",
+      cssVariable: "--font-gabarito",
+      weights: ["400"],
       styles: ["normal"],
       subsets: ["latin"],
     },
