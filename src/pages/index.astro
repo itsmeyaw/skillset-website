@@ -213,6 +213,7 @@ const textLink =
           the 3 this task needs.
         </figcaption>
         {/* With Skillset sits underneath; the Without panel on top is clipped to the slider position. */}
+        {/* Phones truncate each description to one line so the figure stays under 700px tall. */}
         {[true, false].map((skillset) => (
           <div
             class:list={[
@@ -237,7 +238,7 @@ const textLink =
                 Add rate limiting to POST /orders
               </p>
               {session.map(({ label, skills, unused }) => (
-                <div class="relative mt-8">
+                <div class="relative mt-6 sm:mt-8">
                   <p class:list={["text-small text-text-muted", { invisible: skillset && unused }]}>
                     {label}
                   </p>
@@ -250,15 +251,17 @@ const textLink =
                   )}
                   <dl
                     class:list={[
-                      "mt-3 grid gap-y-4",
+                      "mt-3 grid gap-y-3 sm:gap-y-4",
                       { "opacity-70": unused && !skillset, invisible: unused && skillset },
                     ]}
                     data-unused={unused && !skillset}
                   >
                     {skills.map(({ name, description }) => (
-                      <div class="grid gap-x-8 gap-y-1 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                      <div class="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-3 gap-y-1 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-x-8">
                         <dt class="font-mono text-code text-text-primary">{name}</dt>
-                        <dd class="text-pretty text-small text-text-secondary">{description}</dd>
+                        <dd class="truncate text-small text-text-secondary sm:overflow-visible sm:whitespace-normal sm:text-pretty">
+                          {description}
+                        </dd>
                       </div>
                     ))}
                   </dl>
@@ -540,6 +543,27 @@ const textLink =
       slider.setAttribute("aria-valuetext", `${slider.value}% without Skillset shown`);
     };
     slider.addEventListener("input", move);
+    // Touch browsers only drag a range by its thumb, which is 1px here, so a horizontal swipe anywhere sets the value.
+    // The drag waits for 8px of mostly sideways travel, so a vertical scroll that starts here doesn't nudge the handle.
+    let touch: { x: number; y: number; left: number; width: number; dragging: boolean } | null =
+      null;
+    slider.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse") return;
+      const { left, width } = slider.getBoundingClientRect();
+      touch = { x: e.clientX, y: e.clientY, left, width, dragging: false };
+    });
+    slider.addEventListener("pointermove", (e) => {
+      if (!touch) return;
+      const dx = Math.abs(e.clientX - touch.x);
+      if (!touch.dragging && (dx < 8 || dx < Math.abs(e.clientY - touch.y))) return;
+      touch.dragging = true;
+      slider.value = String(Math.round((100 * (e.clientX - touch.left)) / touch.width));
+      move();
+    });
+    // pan-y hands vertical swipes to the browser, which fires pointercancel.
+    for (const type of ["pointerup", "pointercancel"]) {
+      slider.addEventListener(type, () => (touch = null));
+    }
     move(); // the browser may restore a dragged value on back navigation
   }
 
