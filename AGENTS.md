@@ -39,7 +39,7 @@ Development note:
 ## Deployment
 
 Use CI/CD pipeline for automated deployment to Cloudflare Worker static page.
-Domain is `use-skillset.dev`.
+Domain is `skillset.itsmeyaw.id`.
 
 ## Documentation
 
