@@ -70,14 +70,11 @@ const textLink =
 
 <Layout
 	title="Skillset: one pinned list of agent skills for every project"
-	description="Skillset is a CLI that keeps your agent skills in one list, pinned to exact Git commits, and installs that list into any project with one command."
+	description="Skillset is a CLI that keeps your agent skills in one list, pinned to exact Git commits, and installs it into any project with one command."
 >
 	<header class:list={[wrap, 'flex h-18 items-center justify-between gap-6']}>
 		<a href="/" class="inline-flex min-h-11 items-center text-heading">Skillset</a>
 		<nav aria-label="Main" class="flex items-center gap-8">
-			<a href="#why" class:list={[navLink, 'max-sm:hidden']}>Why Skillset</a>
-			<a href="#how" class:list={[navLink, 'max-sm:hidden']}>How it works</a>
-			<a href="#pins" class:list={[navLink, 'max-sm:hidden']}>Pins</a>
 			<a href={github} class={navLink}>GitHub</a>
 		</nav>
 	</header>
@@ -90,14 +87,14 @@ const textLink =
 				Curate your agent skills once. Install them in every project.
 			</h1>
 			<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary" data-enter>
-				Skillset is a CLI that keeps the skills you use with Claude Code, Codex, Cursor and other agents in one
-				list, pinned to exact Git commits. One command installs that list in any project.
+				Keep your agent skills in one list, pinned to exact Git commits. One command installs it in any
+				project.
 			</p>
 
 			<div class="mt-10 max-w-200" data-enter>
 				<CommandLine command={install} primary />
 				<p class="mt-3 text-small text-text-muted">
-					Needs Node.js 22.20+ and Git. To try it without installing, run <code>npx @itsmeyaw/skillset --help</code>.
+					Or try it first with <code>npx @itsmeyaw/skillset --help</code>.
 				</p>
 			</div>
 
@@ -106,51 +103,50 @@ const textLink =
 				<ol aria-labelledby="next-steps" class="mt-3 border-t border-border-separator">
 					<li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
 						<code class="font-mono text-command"><Words text="skillset add --set my-set" /></code>
-						<span class="text-text-secondary">Pick skills from any repository and save them as a list.</span>
+						<span class="text-text-secondary">Save skills from any repository as a list.</span>
 					</li>
 					<li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
 						<code class="font-mono text-command"><Words text="skillset install my-set" /></code>
-						<span class="text-text-secondary">Install that list in the project you are in.</span>
+						<span class="text-text-secondary">Install that list in the current project.</span>
 					</li>
 				</ol>
 			</div>
 		</section>
 
 		<section id="why" class:list={[wrap, 'py-20 lg:py-24']}>
-			<h2 class="max-w-[24ch] text-balance text-title">Every project needs the same skills installed again</h2>
+			<h2 class="max-w-[24ch] text-balance text-title">Stop reinstalling skills</h2>
 			<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
-				Project-scoped skills are installed one project at a time. In each project you run{' '}
-				<code>npx skills add</code> once per source, pick the same skills again, and get whichever commit is
-				latest that day.
+				In each project you run <code>npx skills add</code> for every source, pick the same skills again, and
+				get whatever commit is latest that day.
 			</p>
 
 			<div class="mt-12 grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
 				<Terminal title="Without Skillset" lines={without} data-fade-out>
-					6 installs. Each one takes whichever commit is latest that day.
+					6 installs, each at whatever commit is latest.
 				</Terminal>
 				<div>
 					<Terminal title="With Skillset" lines={withSkillset} data-fade-in>
-						3 installs. Each one takes the pinned commits
+						3 installs, each at the pinned commits
 						<span class="font-mono text-accent-text">9b24366</span> and
 						<span class="font-mono text-accent-text">5863806</span>.
 					</Terminal>
 					<p class="mt-6 max-w-[62ch] text-pretty text-text-secondary">
-						A Skillset records that routine once, with each skill, its repository and its commit. Every
-						project then takes one command and gets the same three skills.
+						A Skillset records that routine once: each skill, its repository and its commit. Every project
+						then needs one command.
 					</p>
 				</div>
 			</div>
 		</section>
 
 		<section id="how" class:list={[wrap, 'py-20 lg:py-24']}>
-			<h2 class="max-w-[24ch] text-balance text-title">Add skills to a list, then install the list</h2>
+			<h2 class="max-w-[24ch] text-balance text-title">Build a list, then install it</h2>
 
 			<div class="mt-12 grid gap-y-16 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5">
 				<div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
 					<h3 class="text-heading">Build your Skillset</h3>
 					<p class="max-w-[62ch] text-pretty text-text-secondary">
-						Run the command below and answer the prompts, or pass the source and skills as flags. Add from as many
-						repositories as you like. Naming the set keeps it in your home directory.
+						Answer the prompts, or pass the source and skills as flags. Add from as many repositories as you
+						like. A named set is saved in your home directory.
 					</p>
 					<CommandLine command="skillset add --set my-set" />
 					<Terminal title="Any directory" lines={build} class="lg:self-start" />
@@ -158,9 +154,9 @@ const textLink =
 				<div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
 					<h3 class="text-heading">Install it in a project</h3>
 					<p class="max-w-[62ch] text-pretty text-text-secondary">
-						Skills install into the agent directories and the <code>skills-lock.json</code> that{' '}
-						<code>npx skills</code> already uses, so your agents find them without extra setup. An install only adds
-						skills. It never removes one that isn’t in the list.
+						Skills go into the same agent directories and <code>skills-lock.json</code> that{' '}
+						<code>npx skills</code> uses, so your agents find them with no setup. Install only adds skills. It
+						never removes any.
 					</p>
 					<CommandLine command="skillset install my-set" />
 					<Terminal title="~/projects/some-project" lines={use} class="lg:self-start" />
@@ -171,11 +167,10 @@ const textLink =
 		<section id="pins" class:list={[wrap, 'py-20 lg:py-24']}>
 			<div class="grid items-start gap-x-8 gap-y-12 lg:grid-cols-2">
 				<div>
-					<h2 class="text-balance text-title">Pinned to the commit you reviewed</h2>
+					<h2 class="text-balance text-title">Pinned to reviewed commits</h2>
 					<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
-						Every skill in a Skillset records the exact Git commit it came from, called its Pin. An install
-						gives you those commits today and six months from now. Nothing changes until you run{' '}
-						<code>skillset update</code>.
+						Each skill in a Skillset records the exact Git commit it came from, its Pin. An install gives you
+						those commits today and in six months. Nothing changes until you run <code>skillset update</code>.
 					</p>
 					<div class="mt-8">
 						<CommandLine command="skillset update --set my-set" />
@@ -184,8 +179,8 @@ const textLink =
 					<h3 class="mt-16 text-heading">Share one file with your team</h3>
 					<p class="mt-4 max-w-[62ch] text-pretty text-text-secondary">
 						Leave out <code>--set</code> and Skillset writes <code>./skillset.json</code> in the project.
-						Commit it, and a teammate runs <code>skillset install</code> to get the same skills at the same
-						commits. A published file installs straight from its HTTPS URL.
+						Commit it, and teammates run <code>skillset install</code> to get the same skills at the same
+						commits. A published file installs from its HTTPS URL.
 					</p>
 					<div class="mt-8">
 						<CommandLine command="skillset install https://example.com/team.json" />
@@ -198,7 +193,7 @@ const textLink =
 		<section id="details" class:list={[wrap, 'py-20 lg:py-24']}>
 			<div class="grid gap-x-8 gap-y-10 lg:grid-cols-2">
 				<div>
-					<h2 class="text-balance text-title">Fits the setup you already have</h2>
+					<h2 class="text-balance text-title">Fits your setup</h2>
 					<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
 						Skillset wraps <a href="https://skills.sh" class={textLink}>Vercel’s Skills CLI</a>, so it works
 						with the agents, sources and lockfile you use today.
@@ -217,11 +212,11 @@ const textLink =
 							},
 							{
 								term: 'Your scripts',
-								text: 'Every command prompts by default. Pass flags and <code>-y</code> to run it unattended in a setup script.',
+								text: 'Commands prompt by default. Pass flags and <code>-y</code> to run unattended.',
 							},
 							{
 								term: 'Your choice of scope',
-								text: 'Install per project or globally, as symlinks or as copies.',
+								text: 'Install per project or globally, as symlinks or copies.',
 							},
 						].map(({ term, text }) => (
 							<div class="grid gap-x-8 gap-y-1 border-t border-border-separator py-5 sm:grid-cols-[11rem_minmax(0,1fr)]">
@@ -252,10 +247,10 @@ const textLink =
 	</main>
 
 	<footer class="border-t border-border-separator">
-		<p class:list={[wrap, 'py-8 text-small text-text-muted']}>
-			Skillset is MIT licensed and made by itsmeyaw. It builds on{' '}
-			<a href="https://skills.sh" class={textLink}>Vercel’s Skills CLI</a>.
-		</p>
+		<div class:list={[wrap, 'flex flex-wrap justify-between gap-x-8 gap-y-2 py-8 text-small text-text-muted']}>
+			<p>© 2026 Yudhistira Arief Wibowo</p>
+			<p>Skillset is MIT licensed.</p>
+		</div>
 	</footer>
 </Layout>
 
