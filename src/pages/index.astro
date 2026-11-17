@@ -176,24 +176,37 @@ const textLink =
     </section>
 
     <section id="how" class:list={[wrap, "py-20 lg:py-24"]}>
-      <h2 class="max-w-[24ch] text-balance text-title">Build a list, then install it</h2>
+      <h2 class="max-w-[24ch] text-balance text-title">Two steps are all you need</h2>
 
       <div class="mt-12 grid gap-y-16 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5">
         <div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
-          <h3 class="text-heading">Build your Skillset</h3>
+          <h3 class="text-heading">
+            <span
+              aria-hidden="true"
+              class="mb-4 flex size-9 items-center justify-center rounded-full border border-text-primary/30 bg-[rgb(255_255_255/0.05)] font-mono text-sm tabular-nums text-text-primary"
+            >
+              1
+            </span>
+            Build your Skillset
+          </h3>
           <p class="max-w-[62ch] text-pretty text-text-secondary">
-            Answer the prompts, or pass the source and skills as flags. Add from as many
-            repositories as you like. A named set is saved in your home directory.
+            Add all your favorite skills for a single work type.
           </p>
           <CommandLine command="skillset add --set my-set" />
           <Terminal title="Any directory" lines={build} class="lg:self-start" />
         </div>
         <div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
-          <h3 class="text-heading">Install it in a project</h3>
+          <h3 class="text-heading">
+            <span
+              aria-hidden="true"
+              class="mb-4 flex size-9 items-center justify-center rounded-full border border-text-primary/30 bg-[rgb(255_255_255/0.05)] font-mono text-sm tabular-nums text-text-primary"
+            >
+              2
+            </span>
+            Install it in a project
+          </h3>
           <p class="max-w-[62ch] text-pretty text-text-secondary">
-            Skills go into the same agent directories and <code>skills-lock.json</code> that{" "}
-            <code>npx skills</code> uses, so your agents find them with no setup. Install only adds
-            skills. It never removes any.
+            Install the exact same skill for all your projects.
           </p>
           <CommandLine command="skillset install my-set" />
           <Terminal title="~/projects/some-project" lines={use} class="lg:self-start" />
