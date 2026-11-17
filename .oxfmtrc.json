@@ -1,0 +1,17 @@
+{
+  "astro": true,
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    ".agents",
+    ".claude",
+    ".impeccable",
+    ".oil-ui",
+    ".vscode",
+    ".code-review-graph",
+    "dist",
+    ".astro",
+    "pnpm-lock.yaml",
+    "skills-lock.json",
+    "*.md"
+  ]
+}
