@@ -4,19 +4,26 @@
  * so flags like `--skill` never split after a hyphen. `mark` highlights one substring.
  */
 interface Props {
-	text: string;
-	mark?: string;
+  text: string;
+  mark?: string;
 }
 
 const { text, mark } = Astro.props;
 
 const split = (word: string) => {
-	const at = mark ? word.indexOf(mark) : -1;
-	return at < 0 ? [word, '', ''] : [word.slice(0, at), mark, word.slice(at + mark!.length)];
+  const at = mark ? word.indexOf(mark) : -1;
+  return at < 0 ? [word, "", ""] : [word.slice(0, at), mark, word.slice(at + mark!.length)];
 };
 ---
+
 {text.split(/( +)/).map((part) => {
-	if (!part.trim()) return part;
-	const [before, marked, after] = split(part);
-	return <span class="inline-block max-w-full indent-0 wrap-anywhere">{before}<span class="text-accent-text">{marked}</span>{after}</span>;
+  if (!part.trim()) return part;
+  const [before, marked, after] = split(part);
+  return (
+    <span class="inline-block max-w-full indent-0 wrap-anywhere">
+      {before}
+      <span class="text-accent-text">{marked}</span>
+      {after}
+    </span>
+  );
 })}
