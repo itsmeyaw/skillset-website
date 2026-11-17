@@ -43,6 +43,62 @@ const use: Line[] = [
   { out: "skills-lock.json" },
 ];
 
+// Descriptions are the real SKILL.md ones; bar widths come from their lengths.
+const session = [
+  {
+    label: "3 skills for this task",
+    short: "Needed",
+    skills: [
+      {
+        name: "tdd",
+        description:
+          "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions “red-green-refactor”, or wants integration tests.",
+      },
+      {
+        name: "grilling",
+        description:
+          "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any ‘grill’ trigger phrases.",
+      },
+      {
+        name: "caveman",
+        description:
+          "Terse caveman voice: answer first, fluff gone, every technical fact kept. Use for /caveman, “caveman mode”, “talk like caveman”, “be brief”, “less tokens”. Stays on until “stop caveman” or “normal mode”.",
+      },
+    ],
+  },
+  {
+    label: "4 UI skills, loaded but not needed",
+    short: "Not needed",
+    unused: true,
+    skills: [
+      {
+        name: "frontend-design",
+        description:
+          "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don’t read as templated defaults.",
+      },
+      {
+        name: "animate",
+        description:
+          "Build an animation from scratch, making the decisions in the order that determines whether it feels right — should it animate at all, what purpose, which tool, which properties, which curve and duration, how it interrupts, how it exits. Writes the implementation. Use when asked to animate something, add motion, make a component feel alive, or build a transition. For critiquing existing motion use review-animations; for auditing a whole codebase use improve-animations.",
+      },
+      {
+        name: "better-typography",
+        description:
+          "Sets and reviews how text renders, from the type scale and spacing to font features, wrapping, truncation and punctuation.",
+      },
+      {
+        name: "better-layout",
+        description:
+          "Sets grouping, alignment, reading order, responsive structure and room for translated text, so a layout holds up when it is resized, translated or mirrored.",
+      },
+    ],
+  },
+].map((group) => ({
+  ...group,
+  chars: group.skills.reduce((sum, { description }) => sum + description.length, 0),
+}));
+const sessionChars = session.reduce((sum, { chars }) => sum + chars, 0);
+
 const entry = (name: string, source: string, commit: string, last = false): Line[] => [
   { out: "    {" },
   { out: `      "name": "${name}",` },
@@ -173,6 +229,66 @@ const textLink =
           </p>
         </div>
       </div>
+    </section>
+
+    <section id="context" class:list={[wrap, "py-20 lg:py-24"]}>
+      <h2 class="max-w-[24ch] text-balance text-title">Each project built differently</h2>
+      <p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+        Global skills are nice, but they are not always useful and take space in your agent context.
+      </p>
+
+      <figure class="mt-12 overflow-hidden rounded-sm border border-border bg-bg-surface">
+        <figcaption class="border-b border-border-separator px-4 py-2.5 font-mono text-small text-text-muted sm:px-6">
+          Agent session without Skillset
+        </figcaption>
+        <div class="p-4 sm:p-6">
+          <p class="text-small text-text-muted">Task</p>
+          <p class="mt-1 font-mono text-code text-text-primary">
+            Add rate limiting to POST /orders
+          </p>
+          {session.map(({ label, skills, unused }) => (
+            <div class="mt-8">
+              <p class="text-small text-text-muted">{label}</p>
+              <dl class:list={["mt-3 grid gap-y-4", { "opacity-70": unused }]} data-unused={unused}>
+                {skills.map(({ name, description }) => (
+                  <div class="grid gap-x-8 gap-y-1 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                    <dt class="font-mono text-code text-text-primary">{name}</dt>
+                    <dd class="text-pretty text-small text-text-secondary">{description}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+        <div class="border-t border-border-separator px-4 py-4 sm:px-6">
+          <p class="text-small text-text-secondary">
+            Share of skill descriptions loaded, by length
+          </p>
+          <div
+            class="mt-3 grid gap-x-0.5"
+            style={`grid-template-columns: ${session.map(({ chars }) => `minmax(0, ${chars}fr)`).join(" ")}`}
+          >
+            {session.map(({ short, skills, chars, unused }) => (
+              <div>
+                <div aria-hidden="true" class="flex h-2 gap-0.5">
+                  {skills.map(({ description }) => (
+                    <span
+                      class:list={[
+                        "rounded-[1px]",
+                        unused ? "bg-border-strong" : "bg-accent-solid",
+                      ]}
+                      style={`flex: ${description.length} 1 0`}
+                    />
+                  ))}
+                </div>
+                <p class="mt-2 text-small tabular-nums text-text-muted">
+                  {short} {Math.round((100 * chars) / sessionChars)}%
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </figure>
     </section>
 
     <section id="how" class:list={[wrap, "py-20 lg:py-24"]}>
@@ -344,14 +460,16 @@ const textLink =
     // Dims the repeated installs and brightens the single command as the comparison scrolls past.
     // 0.6 keeps the dimmed lines readable (5.69:1 against the terminal surface).
     const handOff = (selector: string, opacity: [number, number]) => {
-      const output = document.querySelector(`${selector} pre`);
+      const output = document.querySelector(selector);
       if (!output) return;
       scroll(animate(output, { opacity }, { ease: "linear" }), {
         target: output,
         offset: ["start 0.8", "start 0.3"],
       });
     };
-    handOff("[data-fade-out]", [1, 0.6]);
-    handOff("[data-fade-in]", [0.6, 1]);
+    handOff("[data-fade-out] pre", [1, 0.6]);
+    handOff("[data-fade-in] pre", [0.6, 1]);
+    // The UI skills a backend agent loads anyway. Their smaller grey descriptions need 0.7 to stay at 4.78:1.
+    handOff("[data-unused]", [1, 0.7]);
   }
 </script>
