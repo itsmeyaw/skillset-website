@@ -20,6 +20,26 @@ Load the skills for implementation and design:
 - `design-taste-frontend`
 - `interaction-design`
 - `animate`
+- `better-layout`
+- `better-interface`
+- `better-writing`
+- `better-typography`
+
+After implementation, review using the skills:
+
+- `animation-performance`
+- `review-animation`
+- `unslop`
+
+Development note:
+
+- Always use Tailwind CSS for styling
+- Always use `motion` library for animation instead of Tailwind CSS
+
+## Deployment
+
+Use CI/CD pipeline for automated deployment to Cloudflare Worker static page.
+Domain is `use-skillset.dev`.
 
 ## Documentation
 
