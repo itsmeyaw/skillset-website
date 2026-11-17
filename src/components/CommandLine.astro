@@ -1,0 +1,77 @@
+---
+import Words from './Words.astro';
+
+interface Props {
+	command: string;
+	/** The one filled action of its view. */
+	primary?: boolean;
+}
+
+const { command, primary = false } = Astro.props;
+---
+
+<div
+	class:list={[
+		'flex flex-wrap items-center gap-x-4 gap-y-3 rounded-sm border bg-bg-surface',
+		primary ? 'border-border-strong py-3 pl-5 pr-3' : 'border-border py-2 pl-4 pr-2',
+	]}
+>
+	<code class:list={['flex min-w-0 flex-1 basis-56 gap-[1ch] font-mono', primary ? 'text-command-lg' : 'text-command']}
+		><span class="select-none text-accent-text" aria-hidden="true">$</span><span class="min-w-0" data-copy-text><Words text={command} /></span></code
+	>
+	<button
+		type="button"
+		data-copy
+		class:list={[
+			'inline-flex min-h-11 min-w-24 cursor-pointer max-sm:w-full items-center justify-center rounded-sm px-4 text-small font-medium',
+			primary
+				? 'bg-accent-solid text-text-on-accent hover:bg-accent-solid-hover'
+				: 'border border-border-strong text-text-primary hover:bg-bg-raised',
+		]}
+	>
+		<span class="inline-block" data-copy-label>Copy</span><span class="sr-only">&nbsp;{command}</span>
+	</button>
+	<span class="sr-only" role="status" data-copy-status></span>
+</div>
+
+<script>
+	import { animate, press } from 'motion';
+
+	const ease = [0.23, 1, 0.32, 1] as const;
+	const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+	for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+		const text = button.parentElement!.querySelector('[data-copy-text]')!;
+		const status = button.parentElement!.querySelector('[data-copy-status]')!;
+		const label = button.querySelector('[data-copy-label]')!;
+		let reset = 0;
+
+		press(button, (_, event) => {
+			// Keyboard presses reach here as synthetic pointer events. They get the label change only, no scale.
+			if (reduce.matches || !event.isTrusted) return;
+			animate(button, { scale: 0.97 }, { duration: 0.1, ease });
+			return () => animate(button, { scale: 1 }, { duration: 0.16, ease });
+		});
+
+		button.addEventListener('click', async () => {
+			const command = text.textContent ?? '';
+			let copied = true;
+			try {
+				await navigator.clipboard.writeText(command);
+			} catch {
+				// Clipboard access is blocked or denied, so select the command to make a manual copy one keystroke.
+				copied = false;
+				getSelection()?.selectAllChildren(text);
+			}
+
+			label.textContent = copied ? 'Copied' : 'Selected';
+			status.textContent = copied ? `Copied ${command} to the clipboard` : 'Copying is blocked here. The command is selected, so copy it with your keyboard.';
+
+			clearTimeout(reset);
+			reset = window.setTimeout(() => {
+				label.textContent = 'Copy';
+				status.textContent = '';
+			}, 2000);
+		});
+	}
+</script>

@@ -25,7 +25,7 @@ Load the skills for implementation and design:
 - `better-writing`
 - `better-typography`
 
-After implementation, review using the skills:
+After implementation, review using subagent (sonnet-5.5 or terra-6.1) with the skills:
 
 - `animation-performance`
 - `review-animation`

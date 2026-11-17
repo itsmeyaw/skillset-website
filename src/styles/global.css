@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Drop Tailwind's palette so templates can only reach the role tokens below. */
+  --color-*: initial;
+
+  /* Primitives. One hue per ramp, taken from the CLI's own terminal theme. Never used in templates. */
+  --color-navy-100: oklch(0.94 0.02 263.9);
+  --color-navy-300: oklch(0.79 0.05 263.9);
+  --color-navy-400: oklch(0.68 0.065 263.9);
+  --color-navy-500: oklch(0.57 0.08 263.9);
+  --color-navy-600: oklch(0.47 0.085 263.9);
+  --color-navy-700: oklch(0.38 0.085 263.9);
+  --color-navy-800: oklch(0.31 0.08 263.9);
+  --color-navy-900: oklch(0.25 0.072 263.9);
+  --color-navy-950: oklch(0.2 0.062 263.9);
+  --color-amber-300: oklch(0.93 0.074 84.7);
+  --color-amber-400: oklch(0.885 0.124 84.7);
+
+  /* Semantics. Templates use only these. */
+  --color-bg-page: var(--color-navy-950);
+  --color-bg-surface: var(--color-navy-900);
+  --color-bg-raised: var(--color-navy-800);
+  --color-text-primary: var(--color-navy-100);
+  --color-text-secondary: var(--color-navy-300);
+  --color-text-muted: var(--color-navy-400);
+  --color-text-on-accent: var(--color-navy-950);
+  --color-border-separator: var(--color-navy-700);
+  --color-border: var(--color-navy-600);
+  --color-border-strong: var(--color-navy-500);
+  --color-border-focus: var(--color-amber-400);
+  --color-accent-solid: var(--color-amber-400);
+  --color-accent-solid-hover: var(--color-amber-300);
+  --color-accent-text: var(--color-amber-400);
+
+  /* Type roles: size, line-height, tracking and weight decided together. */
+  --text-display: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+  --text-title: clamp(1.75rem, 1.35rem + 1.7vw, 2.75rem);
+  --text-title--line-height: 1.15;
+  --text-title--letter-spacing: -0.02em;
+  --text-title--font-weight: 600;
+  --text-heading: 1.25rem;
+  --text-heading--line-height: 1.3;
+  --text-heading--letter-spacing: -0.01em;
+  --text-heading--font-weight: 600;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.55;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-command: clamp(0.9375rem, 0.85rem + 0.4vw, 1.125rem);
+  --text-command--line-height: 1.5;
+  --text-command-lg: clamp(1rem, 0.8rem + 0.85vw, 1.375rem);
+  --text-command-lg--line-height: 1.4;
+  --text-code: 0.875rem;
+  --text-code--line-height: 1.7;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
+
+  /* Code inside running text. Commands and terminal output set their own type. */
+  :where(p, dd) code {
+    @apply rounded-sm bg-bg-raised px-1.5 py-0.5 font-mono text-[0.875em] whitespace-nowrap text-text-primary;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-solid);
+    color: var(--color-text-on-accent);
+  }
+
+  /* The hero starts hidden only when the script that reveals it will run and reduced motion is off. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-enter] {
+      opacity: 0;
+    }
+  }
+}

@@ -1,23 +1,46 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="theme-color" content="#071432" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<Font cssVariable="--font-geist" preload />
+		<Font cssVariable="--font-geist-mono" preload />
+		<script is:inline>
+			document.documentElement.classList.add('js');
+			// shortcut: a page script that is slow or never loads costs the entrance, not the hero, which shows after 0.8s
+			setTimeout(() => document.documentElement.classList.remove('js'), 800);
+		</script>
 	</head>
-	<body>
+	<body class="bg-bg-page text-body text-text-primary">
+		<a
+			href="#main"
+			class="sr-only rounded-sm bg-accent-solid px-4 py-2 font-medium text-text-on-accent focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-10"
+		>
+			Skip to content
+		</a>
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

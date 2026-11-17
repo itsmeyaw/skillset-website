@@ -1,11 +1,283 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import CommandLine from '../components/CommandLine.astro';
+import Terminal, { type Line } from '../components/Terminal.astro';
+import Words from '../components/Words.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const install = 'npm install -g @itsmeyaw/skillset';
+const github = 'https://github.com/itsmeyaw/skillset';
+const npm = 'https://www.npmjs.com/package/@itsmeyaw/skillset';
+
+const projects = ['api', 'web', 'docs'];
+
+const without: Line[] = projects.flatMap((name) => [
+	{ cmd: `cd ~/projects/${name}` },
+	{ cmd: 'npx skills add mattpocock/skills --skill grilling tdd' },
+	{ cmd: 'npx skills add juliusbrussee/caveman --skill caveman' },
+]);
+
+const withSkillset: Line[] = projects.flatMap((name) => [
+	{ cmd: `cd ~/projects/${name}` },
+	{ cmd: 'skillset install my-set' },
+]);
+
+// Output below is copied from real runs of skillset 0.3.0.
+const build: Line[] = [
+	{ cmd: 'skillset add mattpocock/skills -s grilling -s tdd --set my-set' },
+	{ out: 'Added grilling, tdd to /Users/you/.skillset/my-set.json' },
+	{ cmd: 'skillset add juliusbrussee/caveman -s caveman --set my-set' },
+	{ out: 'Added caveman to /Users/you/.skillset/my-set.json' },
+	{ cmd: 'skillset ls --set my-set' },
+	{ out: 'caveman  juliusbrussee/caveman  9b24366' },
+	{ out: 'grilling  mattpocock/skills  5863806' },
+	{ out: 'tdd  mattpocock/skills  5863806' },
+];
+
+const use: Line[] = [
+	{ cmd: 'cd ~/projects/some-project' },
+	{ cmd: 'skillset install my-set -y' },
+	{ out: 'Installed caveman, grilling, tdd' },
+	{ cmd: 'ls .agents/skills' },
+	{ out: 'caveman  grilling  tdd' },
+	{ cmd: 'ls' },
+	{ out: 'skills-lock.json' },
+];
+
+const entry = (name: string, source: string, commit: string, last = false): Line[] => [
+	{ out: '    {' },
+	{ out: `      "name": "${name}",` },
+	{ out: `      "source": "${source}",` },
+	{ out: `      "commit": "${commit}"`, mark: commit },
+	{ out: last ? '    }' : '    },' },
+];
+
+const file: Line[] = [
+	{ out: '{' },
+	{ out: '  "$schema": "https://raw.githubusercontent.com/itsmeyaw/skillset/main/schemas/skillset/v1.json",' },
+	{ out: '  "skills": [' },
+	...entry('caveman', 'juliusbrussee/caveman', '9b243662ff98d392bc0a95b865a554583d71be75'),
+	...entry('grilling', 'mattpocock/skills', '5863806dd4e15c63174bee4e7515a4256792ecfa'),
+	...entry('tdd', 'mattpocock/skills', '5863806dd4e15c63174bee4e7515a4256792ecfa', true),
+	{ out: '  ]' },
+	{ out: '}' },
+];
+
+const wrap = 'mx-auto w-full max-w-300 px-6 sm:px-8 lg:px-12';
+const navLink = 'inline-flex min-h-11 items-center text-small text-text-secondary hover:text-text-primary';
+const textLink =
+	'text-text-primary underline decoration-border-strong underline-offset-4 hover:decoration-accent-text';
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Skillset: one pinned list of agent skills for every project"
+	description="Skillset is a CLI that keeps your agent skills in one list, pinned to exact Git commits, and installs that list into any project with one command."
+>
+	<header class:list={[wrap, 'flex h-18 items-center justify-between gap-6']}>
+		<a href="/" class="inline-flex min-h-11 items-center text-heading">Skillset</a>
+		<nav aria-label="Main" class="flex items-center gap-8">
+			<a href="#why" class:list={[navLink, 'max-sm:hidden']}>Why Skillset</a>
+			<a href="#how" class:list={[navLink, 'max-sm:hidden']}>How it works</a>
+			<a href="#pins" class:list={[navLink, 'max-sm:hidden']}>Pins</a>
+			<a href={github} class={navLink}>GitHub</a>
+		</nav>
+	</header>
+
+	<main id="main">
+		<section
+			class:list={[wrap, 'flex flex-col justify-center py-14 lg:min-h-[min(calc(100svh-4.5rem),54rem)] lg:py-20']}
+		>
+			<h1 class="text-balance text-display" data-enter>
+				Curate your agent skills once. Install them in every project.
+			</h1>
+			<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary" data-enter>
+				Skillset is a CLI that keeps the skills you use with Claude Code, Codex, Cursor and other agents in one
+				list, pinned to exact Git commits. One command installs that list in any project.
+			</p>
+
+			<div class="mt-10 max-w-200" data-enter>
+				<CommandLine command={install} primary />
+				<p class="mt-3 text-small text-text-muted">
+					Needs Node.js 22.20+ and Git. To try it without installing, run <code>npx @itsmeyaw/skillset --help</code>.
+				</p>
+			</div>
+
+			<div class="mt-12 lg:mt-16" data-enter>
+				<p id="next-steps" class="text-small text-text-muted">Then two commands</p>
+				<ol aria-labelledby="next-steps" class="mt-3 border-t border-border-separator">
+					<li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
+						<code class="font-mono text-command"><Words text="skillset add --set my-set" /></code>
+						<span class="text-text-secondary">Pick skills from any repository and save them as a list.</span>
+					</li>
+					<li class="grid gap-x-8 gap-y-1 border-b border-border-separator py-4 lg:grid-cols-2">
+						<code class="font-mono text-command"><Words text="skillset install my-set" /></code>
+						<span class="text-text-secondary">Install that list in the project you are in.</span>
+					</li>
+				</ol>
+			</div>
+		</section>
+
+		<section id="why" class:list={[wrap, 'py-20 lg:py-24']}>
+			<h2 class="max-w-[24ch] text-balance text-title">Every project needs the same skills installed again</h2>
+			<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+				Project-scoped skills are installed one project at a time. In each project you run{' '}
+				<code>npx skills add</code> once per source, pick the same skills again, and get whichever commit is
+				latest that day.
+			</p>
+
+			<div class="mt-12 grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
+				<Terminal title="Without Skillset" lines={without} data-fade-out>
+					6 installs. Each one takes whichever commit is latest that day.
+				</Terminal>
+				<div>
+					<Terminal title="With Skillset" lines={withSkillset} data-fade-in>
+						3 installs. Each one takes the pinned commits
+						<span class="font-mono text-accent-text">9b24366</span> and
+						<span class="font-mono text-accent-text">5863806</span>.
+					</Terminal>
+					<p class="mt-6 max-w-[62ch] text-pretty text-text-secondary">
+						A Skillset records that routine once, with each skill, its repository and its commit. Every
+						project then takes one command and gets the same three skills.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="how" class:list={[wrap, 'py-20 lg:py-24']}>
+			<h2 class="max-w-[24ch] text-balance text-title">Add skills to a list, then install the list</h2>
+
+			<div class="mt-12 grid gap-y-16 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5">
+				<div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
+					<h3 class="text-heading">Build your Skillset</h3>
+					<p class="max-w-[62ch] text-pretty text-text-secondary">
+						Run the command below and answer the prompts, or pass the source and skills as flags. Add from as many
+						repositories as you like. Naming the set keeps it in your home directory.
+					</p>
+					<CommandLine command="skillset add --set my-set" />
+					<Terminal title="Any directory" lines={build} class="lg:self-start" />
+				</div>
+				<div class="grid gap-y-5 lg:row-span-4 lg:grid-rows-subgrid">
+					<h3 class="text-heading">Install it in a project</h3>
+					<p class="max-w-[62ch] text-pretty text-text-secondary">
+						Skills install into the agent directories and the <code>skills-lock.json</code> that{' '}
+						<code>npx skills</code> already uses, so your agents find them without extra setup. An install only adds
+						skills. It never removes one that isn’t in the list.
+					</p>
+					<CommandLine command="skillset install my-set" />
+					<Terminal title="~/projects/some-project" lines={use} class="lg:self-start" />
+				</div>
+			</div>
+		</section>
+
+		<section id="pins" class:list={[wrap, 'py-20 lg:py-24']}>
+			<div class="grid items-start gap-x-8 gap-y-12 lg:grid-cols-2">
+				<div>
+					<h2 class="text-balance text-title">Pinned to the commit you reviewed</h2>
+					<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+						Every skill in a Skillset records the exact Git commit it came from, called its Pin. An install
+						gives you those commits today and six months from now. Nothing changes until you run{' '}
+						<code>skillset update</code>.
+					</p>
+					<div class="mt-8">
+						<CommandLine command="skillset update --set my-set" />
+					</div>
+
+					<h3 class="mt-16 text-heading">Share one file with your team</h3>
+					<p class="mt-4 max-w-[62ch] text-pretty text-text-secondary">
+						Leave out <code>--set</code> and Skillset writes <code>./skillset.json</code> in the project.
+						Commit it, and a teammate runs <code>skillset install</code> to get the same skills at the same
+						commits. A published file installs straight from its HTTPS URL.
+					</p>
+					<div class="mt-8">
+						<CommandLine command="skillset install https://example.com/team.json" />
+					</div>
+				</div>
+				<Terminal title="~/.skillset/my-set.json" lines={file} />
+			</div>
+		</section>
+
+		<section id="details" class:list={[wrap, 'py-20 lg:py-24']}>
+			<div class="grid gap-x-8 gap-y-10 lg:grid-cols-2">
+				<div>
+					<h2 class="text-balance text-title">Fits the setup you already have</h2>
+					<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+						Skillset wraps <a href="https://skills.sh" class={textLink}>Vercel’s Skills CLI</a>, so it works
+						with the agents, sources and lockfile you use today.
+					</p>
+				</div>
+				<dl class="border-b border-border-separator">
+					{
+						[
+							{
+								term: 'Your agents',
+								text: 'Installs for Universal agents (<code>.agents/skills</code>), Claude Code and any agent it detects, or only the ones you name with <code>-a</code>.',
+							},
+							{
+								term: 'Your sources',
+								text: 'Takes <code>owner/repo</code>, a branch, a tag or a full commit SHA, GitHub tree URLs and other Git URLs. Private repositories use your existing Git credentials.',
+							},
+							{
+								term: 'Your scripts',
+								text: 'Every command prompts by default. Pass flags and <code>-y</code> to run it unattended in a setup script.',
+							},
+							{
+								term: 'Your choice of scope',
+								text: 'Install per project or globally, as symlinks or as copies.',
+							},
+						].map(({ term, text }) => (
+							<div class="grid gap-x-8 gap-y-1 border-t border-border-separator py-5 sm:grid-cols-[11rem_minmax(0,1fr)]">
+								<dt class="font-medium">{term}</dt>
+								<dd class="text-pretty text-text-secondary" set:html={text} />
+							</div>
+						))
+					}
+				</dl>
+			</div>
+		</section>
+
+		<section id="install" class="border-t border-border-separator">
+			<div class:list={[wrap, 'py-20 lg:py-24']}>
+				<h2 class="text-balance text-title">Install Skillset</h2>
+				<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
+					Install the CLI with npm, then run <code>skillset add --set my-set</code> to build your first list.
+				</p>
+				<div class="mt-10 max-w-200">
+					<CommandLine command={install} primary />
+				</div>
+				<p class="mt-6 flex flex-wrap gap-x-8 gap-y-2">
+					<a href={`${github}#readme`} class:list={[textLink, 'inline-flex min-h-11 items-center']}>Read the docs on GitHub</a>
+					<a href={npm} class:list={[textLink, 'inline-flex min-h-11 items-center']}>View the package on npm</a>
+				</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="border-t border-border-separator">
+		<p class:list={[wrap, 'py-8 text-small text-text-muted']}>
+			Skillset is MIT licensed and made by itsmeyaw. It builds on{' '}
+			<a href="https://skills.sh" class={textLink}>Vercel’s Skills CLI</a>.
+		</p>
+	</footer>
 </Layout>
+
+<script>
+	import { animate, scroll, stagger } from 'motion';
+
+	const ease = [0.23, 1, 0.32, 1] as const;
+
+	// Nothing below runs with reduced motion, because every state is already readable without it.
+	// It also stays off once the 0.8s fallback in Layout has shown the hero, so a late script can't hide it again.
+	const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (!reduce && document.documentElement.classList.contains('js')) {
+		animate('[data-enter]', { opacity: [0, 1], y: [12, 0] }, { duration: 0.5, ease, delay: stagger(0.06) });
+
+		// Dims the repeated installs and brightens the single command as the comparison scrolls past.
+		// 0.6 keeps the dimmed lines readable (5.69:1 against the terminal surface).
+		const handOff = (selector: string, opacity: [number, number]) => {
+			const output = document.querySelector(`${selector} pre`);
+			if (!output) return;
+			scroll(animate(output, { opacity }, { ease: 'linear' }), { target: output, offset: ['start 0.8', 'start 0.3'] });
+		};
+		handOff('[data-fade-out]', [1, 0.6]);
+		handOff('[data-fade-in]', [0.6, 1]);
+	}
+</script>
