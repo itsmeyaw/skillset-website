@@ -72,6 +72,7 @@ const textLink =
 	title="Skillset: one pinned list of agent skills for every project"
 	description="Skillset is a CLI that keeps your agent skills in one list, pinned to exact Git commits, and installs it into any project with one command."
 >
+	<div aria-hidden="true" class="grain-glow pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(100svh,56rem)]"></div>
 	<header class:list={[wrap, 'flex h-18 items-center justify-between gap-6']}>
 		<a href="/" class="inline-flex min-h-11 items-center text-heading">Skillset</a>
 		<nav aria-label="Main" class="flex items-center gap-8">
@@ -229,7 +230,8 @@ const textLink =
 			</div>
 		</section>
 
-		<section id="install" class="border-t border-border-separator">
+		<section id="install" class="relative border-t border-border-separator">
+			<div aria-hidden="true" class="grain-glow pointer-events-none absolute inset-0 -z-10 [--glow-at:50%_115%]"></div>
 			<div class:list={[wrap, 'py-20 lg:py-24']}>
 				<h2 class="text-balance text-title">Install Skillset</h2>
 				<p class="mt-6 max-w-[50ch] text-pretty text-lead text-text-secondary">
